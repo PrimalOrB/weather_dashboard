@@ -4,6 +4,7 @@
   margin: 0;
   font-family: Arial, Helvetica, sans-serif;
   border: 1px solid black;
+  background-color: lightblue;
 }
 
 .body {
@@ -50,9 +51,28 @@ header {
   flex-direction: column;
 }
 
+.current-container {
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+.current-info {
+  flex: 1;
+}
+
+.curren-icon {
+  flex: 1;
+}
+
 .current-container h2,
 .current-container h3 {
   display: inline-block;
+  margin: 0 0.25em;
+}
+
+.current-title {
+  display: flex;
+  flex-wrap: nowrap;
 }
 
 .current-container span {
@@ -67,7 +87,7 @@ header {
 }
 
 .card {
-  flex: 1;
+  width: 100%;
   height: 200px;
 }
 
@@ -76,11 +96,20 @@ header {
     display: block;
   }
 
+  .weather-display-container {
+    padding-left: 1em;
+  }
+
   .content {
     flex-direction: row;
   }
 
+  .card {
+    width: 19%;
+  }
+
   .forecast-cards {
     flex-direction: row;
+    justify-content: space-between;
   }
 }
