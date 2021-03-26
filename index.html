@@ -33,11 +33,14 @@
 
             <main class="weather-display-container">
                 <div class="current-container">
-                    <h2>daily weather</h2>
-                    <span>temp</span>
-                    <span>hum</span>
-                    <span>wind</span>
-                    <span>uv</span>
+                    <div>
+                        <h2 class="location"></h2>
+                        <h2 class="date"></h2>
+                    </div>
+                    <div class="current_entry"><h3>Temperature: </h3><span id="cur-temperature">temp</span></div>
+                    <div class="current_entry"><h3>Humidity: </h3><span id="cur-humidity">hum</span></div>
+                    <div class="current_entry"><h3>Wind: </h3><span id="cur-wind">wind</span><span id="cur-wind-dir"></span></div>
+                    <div class="current_entry"><h3>UV Index: </h3><span id="cur-uv">uv</span></div>
                 </div>
                 <div class=forecast-container>
                     <h2>5-day forecast</h2>
@@ -53,9 +56,15 @@
         </div>
     </div>
 
-     <!-- Link to font awesome kit -->
-     <script src="https://kit.fontawesome.com/20930007b6.js" crossorigin="anonymous"></script>
-     <!-- Link to javaScrip -->
+    <!-- Link to font awesome kit -->
+    <script src="https://kit.fontawesome.com/20930007b6.js" crossorigin="anonymous"></script>
+    <!-- Add jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
+    <!-- momentjs -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <!-- Link to javaScript -->
     <script src="./assets/js/script.js"></script>
 </body>
 </html>

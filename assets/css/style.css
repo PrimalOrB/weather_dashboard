@@ -50,8 +50,15 @@ header {
   flex-direction: column;
 }
 
+.current-container h2,
+.current-container h3 {
+  display: inline-block;
+}
+
 .current-container span {
-  display: block;
+  display: inline-block;
+  padding: 0 0.25em;
+  margin: 0 0.25em;
 }
 
 .forecast-cards {
