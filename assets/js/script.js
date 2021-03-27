@@ -2,6 +2,15 @@
 var apiKey = '8462b9d4211d198b0ad040601557274b';
 // global city search value
 var searchCity
+// global history val
+var searchHistory = []
+// get storage of update history array
+getStorage()
+// display history list
+displayHistory()
+
+// Initialize current date fetch
+geoLocation();
 
 // On Page Load, get current location data and set as current selection
     // Get navigator geolocation (on user confirmation)
@@ -106,6 +115,8 @@ function postLocation( data ) {
     $( '.current-info' )
         .html( '' )
         .append( title );
+
+    setStorage( data )
 };
 
 // generate HTML and post data for the current date
@@ -365,7 +376,7 @@ $( document ).click( function( event ) {
     }
 });
 
-  // listen for form submit as another entry method
+// listen for form submit as another entry method
 $( '#search-form' ).submit( function(event) {
     event.preventDefault()
 
@@ -381,7 +392,74 @@ $( '#search-field' )
     closeDropdown()
 });  
 
+// set storage entry
+function setStorage( data ) {
+    var storageItem = { 
+        'location': `${ data.name }, ${ data.country }`,
+        'lat': data.lat,
+        'lon': data.lon,
+        'timestamp': moment().valueOf()
+     }
 
-    // Initialize current date fetch
-geoLocation();
+    // check to see if location already exists
+    var existing = searchHistory.filter(x => x.location === storageItem.location);
 
+    // if it does not exist, push to storage and update display
+    if( !existing.length ) {
+        searchHistory.push( storageItem) 
+
+        var string = JSON.stringify( searchHistory )
+
+        localStorage.setItem( 'weather-search-history', string )
+        // clear current display
+        $( '.search-history' )
+            .html( '' )
+        // post display
+        displayHistory()
+    }
+}
+
+// get storage entries
+function getStorage() {
+    // set initial array
+    searchHistory = []
+    // if storage key exists, set variable as parse data
+    if( JSON.parse( localStorage.getItem( 'weather-search-history') ) ) {
+        searchHistory = JSON.parse( localStorage.getItem( 'weather-search-history') )
+    }
+}
+
+// display history list
+function displayHistory() {
+        // sort history list descending (newest first)
+    var sortedDesc = searchHistory.sort(({timestamp:a}, {timestamp:b}) => b-a);
+        // set max value of list (20 items)
+    var listValue = Math.min( sortedDesc.length, 20 )
+    for ( var i = 0; i < listValue; i++) {
+        var span = $( '<span>' )
+            .text( sortedDesc[i].location )
+            .attr( 'lat', sortedDesc[i].lat )
+            .attr( 'lon', sortedDesc[i].lon )
+        var li = $( '<li>' )
+            .append( span )
+
+        $( '.search-history' )
+            .append( li )    
+    }
+};
+
+// clear history
+function clearHistory() {
+        // remove from storage
+    localStorage.removeItem( 'weather-search-history' )
+        // get update storage
+    getStorage()
+        // clear current display
+    $( '.search-history' )
+            .html( '' )
+        // display history   
+    displayHistory()
+};
+
+// listen for click on clear history button
+$( '#clear-history' ).click( clearHistory );
