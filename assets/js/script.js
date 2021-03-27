@@ -87,9 +87,13 @@ function postLocation( data ) {
     var location =  $( '<h2>' )
         .addClass( 'location' )    
         .text( `${ data.name }, ${ data.country }` )
-    $( '.current-title' )
-        .html( '' )
+    var title = $( '<div>' )
+        .addClass( 'current-title' )
         .append( location )
+
+    $( '.current-info' )
+        .html( '' )
+        .append( title )
 }
 
 function postCurrent( data ) {
@@ -108,36 +112,68 @@ function postCurrent( data ) {
         .addClass( 'icon' )
         .append( iconImg  )
     $( '.current-icon' )
+        .html( '' )
         .append( iconDiv )
 
+    var tempTitle = $( '<h3>' )
+        .text( 'Temperature: ')    
     var tempSpan = $( '<span> ')
         .text( `${(data.current.temp).toFixed(1)} °C` ) 
+    var tempDiv = $( '<div>' )
+        .addClass( 'current_entry' )
+        .attr( 'id', 'cur-temperature')
+        .append( tempTitle )
+        .append( tempSpan )
+
+    var humidityTitle = $( '<h3>' )
+        .text( 'Humidity: ') 
     var humiditySpan = $( '<span>' )
         .text( `${data.current.humidity} %` )
+    var humidityDiv = $( '<div>' )
+        .addClass( 'current_entry' )
+        .attr( 'id', 'cur-humidity')
+        .append( humidityTitle )
+        .append( humiditySpan )
+
+    var WindTitle = $( '<h3>' )
+        .text( 'Wind: ')    
     var windSpan = $( '<span>' )
         .text( `${( data.current.wind_speed * 3.6 ).toFixed(1)} km/h` )
     var windArrow = $( '<span>' )
         .html( '<i class="fas fa-location-arrow"></i>' )
         .css({ 'transform' : 'rotate('+ ( 135 + data.current.wind_deg ) +'deg)' })
+    var windDiv = $( '<div>' )
+        .addClass( 'current_entry' )
+        .attr( 'id', 'cur-wind')
+        .append( WindTitle )
+        .append( windSpan )
+        .append( windArrow )
+
+    var uvTitle = $( '<h3>' )
+        .text( 'UV: ')   
     var uvSpan = $( '<span>' )
         .text( data.current.uvi )
         .css({ 'background-color': `hsl(${ uvColor( data.current.uvi ) },  100%, 50%)` })
-
-    $( '#cur-temperature' )
-        .append( tempSpan ) 
-    $( '#cur-humidity' )
-        .append( humiditySpan )
-    $( '#cur-wind' )
-        .append( windSpan )
-        .append( windArrow )
-    $( '#cur-uv' )
+    var uvDiv = $( '<div>' )
+        .addClass( 'current_entry' )
+        .attr( 'id', 'cur-uv')
+        .append( uvTitle )
         .append( uvSpan )
+
+    $( '.current-info' )
+        .append( tempDiv )    
+        .append( humidityDiv )
+        .append( windDiv )
+        .append( uvDiv )
+
+
 }
 
 function postForecast( data ) {
-    console.log( data )
-    $( '.card' )
-        .each( function( i ) {
+    $( '.forecast-cards' )
+        .html( '' )
+
+    for ( var i = 0; i < 5; i++ ) {
             var datetime = data.daily[i+1].dt
                 // create moment item
             var momentTime = moment( ( datetime ) * 1000 ).format('MM/DD/YY' )
@@ -169,15 +205,18 @@ function postForecast( data ) {
                 .append( humiditySpan )
 
                 // append elements    
-            $( this )
-            .css({ 'display': 'block'})
-            .append( title )
-            .append( iconDiv )
-            .append( tempDiv )
-            .append( humidityDiv )
+            var card = $( '<div>' )
+                .css({ 'display': 'block'})
+                .addClass( 'card' )
+                .append( title )
+                .append( iconDiv )
+                .append( tempDiv )
+                .append( humidityDiv )
 
-        })
-        
+            $( '.forecast-cards' )
+                .append( card )    
+  
+    }
 }
 
 // set angle of HSL wheel for apply for UV severity color
@@ -189,11 +228,81 @@ function uvColor( value ) {
     return hslPos
 }
 
+//Search field
+$( '#search-field' ).on( 'keyup change', function() {
+    var text = $(this).val()
+    var search = `https://api.teleport.org/api/cities/?search=${text}`
+    
+    fetch(search).then(function(response) {
+        if (response.ok) {
+          response.json().then(function(data) {
+            $( '.dropdown' )
+                .html( '' )
+            dropDownList( data )
+            });
+        } else {
+          console.log("Error: " + response.statusText);
+        }
+      })
+      .catch( function ( error ) {
+          console.log( 'Unable to connect to cities API' )
+      });
+})
 
+// open drop down list and populate
+function dropDownList( data ) {
+    var count = Math.min( 10, data.count )
+    $( '.dropdown' )
+        .css( { 'display': 'inline-block' } )
+    for ( var i = 0; i < count ; i++ ) {
+        var li = $( "<li>" )
+            .text( data._embedded['city:search-results'][i].matching_full_name )
+            .attr( 'data-geoname', `${data._embedded['city:search-results'][i]._links['city:item'].href}` )
+            .addClass( 'dropdown-item' )
+        $( '.dropdown' )
+            .append( li ) 
+    }
+}
 
+// listen for click inside / outside the dropdown list for selections
+$(document).click(function(event) { 
+    var $target = $(event.target);
+    if ( $target.closest('.dropdown').length ) {
+        var data = event.target.dataset.geoname
+        fetch(data).then(function(response) {
+            if (response.ok) {
+              response.json().then(function(data) {
+                    console.log(data.location.latlon)
+                    var latitude  = data.location.latlon.latitude;
+                    var longitude = data.location.latlon.longitude;
 
+                    var geocode = {
+                        lat: latitude,
+                        lon: longitude
+                    }
+                    getLocationToCity( geocode )
 
+                    $( '.dropdown' )
+                        .html( '' )
+                        .css( { 'display': 'none' } )
+                    $( '#search-field' )
+                        .val( '' )
 
+                });
+            } else {
+              console.log("Error: " + response.statusText);
+            }
+          })
+          .catch( function ( error ) {
+              console.log( 'Unable to connect to cities API' )
+          });
+
+    } else {
+        $( '.dropdown' )
+            .html( '' )
+            .css( { 'display': 'none' } )
+    }
+  });
 
 
     // Initialize current date pull

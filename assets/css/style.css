@@ -39,10 +39,27 @@ header {
 
 #search-field {
   width: 100%;
+  position: relative;
+}
+
+.dropdown {
+  position: absolute;
+  display: none;
+  width: 200px;
+  transform: translateY(1em);
+}
+
+.dropdown li {
+  background-color: white;
+  list-style: none;
 }
 
 .search-history {
   display: none;
+}
+
+.search-history li {
+  list-style: none;
 }
 
 .weather-display-container {
