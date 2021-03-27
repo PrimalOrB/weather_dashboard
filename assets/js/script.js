@@ -112,7 +112,7 @@ function postLocation( data ) {
         .addClass( 'current-title' )
         .append( location );
 
-    $( '.current-info' )
+    $( '.current-container' )
         .html( '' )
         .append( title );
 
@@ -201,12 +201,18 @@ function postCurrent( data ) {
         .append( uvTitle )
         .append( uvSpan );
 
-        // append all to DOM
-    $( '.current-info' )
+    var infoDiv = $( '<div>' )
+        .addClass( 'current-info' )    
         .append( tempDiv )    
         .append( humidityDiv )
         .append( windDiv )
         .append( uvDiv );
+
+        // append all to DOM
+    $( '.current-container' )
+        .append( infoDiv )
+        .append( iconDiv )
+        
 };
 
     // generate HTML for 5-day forecast
@@ -222,15 +228,10 @@ function postForecast( data ) {
             var momentTime = moment( ( datetime ) * 1000 ).format('MM/DD/YY' );
                 // title of the date
             var title = $( '<h3>' )
+                .attr( 'id', 'forcast-date' )
+                .addClass( 'forecast-line' )
                 .text( momentTime ) ;
-                // icon image
-            var iconImg = $( '<img>' )
-                .attr( 'src', `https://openweathermap.org/img/wn/${data.daily[i+1].weather[0].icon}@2x.png`);
-                // containing div
-            var iconDiv = $( '<div>' )
-                .addClass( 'icon' )
-                .append( iconImg  );
-                // temp title
+                  // temp title
             var tempTitle = $( '<span>' )
                 .text( 'Temp: ');
                 // temp value, formatted
@@ -238,6 +239,8 @@ function postForecast( data ) {
                 .text( `${(data.daily[i+1].temp.day).toFixed(1)} °C` );
                 // temp div
             var tempDiv = $( '<div>' )
+                .attr( 'id', 'forcast-temperature' )
+                .addClass( 'forecast-line' )
                 .append( tempTitle )
                 .append( tempSpan );
                 // humidity title
@@ -248,17 +251,32 @@ function postForecast( data ) {
                 .text( `${(data.daily[i+1].humidity).toFixed(1)} %` );
                 // humidity div
             var humidityDiv = $( '<div>' )
+                .attr( 'id', 'forcast-humidity' )
+                .addClass( 'forecast-line' )
                 .append( humdityTitle )
                 .append( humiditySpan );
 
-                // append elements    
-            var card = $( '<div>' )
-                .css({ 'display': 'block'})
-                .addClass( 'card' )
+            var infoDiv = $( '<div>' )
+                .addClass( 'forecast-info' )
                 .append( title )
-                .append( iconDiv )
                 .append( tempDiv )
                 .append( humidityDiv );
+
+
+                // icon image
+            var iconImg = $( '<img>' )
+                .attr( 'src', `https://openweathermap.org/img/wn/${data.daily[i+1].weather[0].icon}@2x.png`);
+                // containing div
+            var iconDiv = $( '<div>' )
+                .addClass( 'forecast-icon' )
+                .append( iconImg  );    
+
+                // append elements    
+            var card = $( '<div>' )
+                .addClass( 'card' )
+                .append( infoDiv )
+                .append( iconDiv )
+                
 
                 // add card to DOM
             $( '.forecast-cards' )

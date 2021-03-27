@@ -3,8 +3,7 @@
   padding: 0;
   margin: 0;
   font-family: Arial, Helvetica, sans-serif;
-  /* border: 1px solid black; */
-  /* background-color: lightblue; */
+  border: 1px solid black;
 }
 
 .body {
@@ -16,6 +15,7 @@
 .container {
   max-width: 1200px;
   margin: 0 auto;
+  padding: 0.5em;
 }
 
 header {
@@ -67,11 +67,12 @@ header,
   outline: none;
   padding: 0.25em 0;
   border-radius: 0.5em;
+  margin-top: 0.5em;
 }
 
 #search-field {
   padding: 0.5em;
-  border-radius: 0.5em 0 0 0;
+  border-radius: 0.5em 0 0 0.5em;
   outline: none;
   border: none;
   background-color: lightgray;
@@ -79,7 +80,7 @@ header,
 
 #submit-button {
   padding: 0 0.5em;
-  border-radius: 0 0.5em 0 0;
+  border-radius: 0 0.5em 0.5em 0;
   border: 0;
   overflow: hidden;
 }
@@ -128,14 +129,14 @@ header,
 
 .current-container {
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
 }
 
 .current-info {
   flex: 1;
 }
 
-.curren-icon {
+.current-icon {
   flex: 1;
 }
 
@@ -148,15 +149,13 @@ header,
 .current-title {
   display: flex;
   flex-wrap: nowrap;
+  width: 100%;
 }
 
 .current-container span {
   display: inline-block;
   padding: 0 0.25em;
   margin: 0 0.25em;
-}
-
-.forecast-container {
 }
 
 .forecast-cards {
@@ -166,15 +165,44 @@ header,
 
 .card {
   width: 100%;
-  display: none;
+  /* display: none; */
   background-color: white;
   padding: 0.5em;
   border-radius: 0.5em;
+  margin-bottom: 0.5em;
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.forecast-info {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  flex: 1;
+}
+
+.forecast-line {
+  display: inline-block;
+}
+
+.forecast-icon {
+  text-align: center;
+  flex: 1;
 }
 
 @media screen and (min-width: 768px) {
   .search-history {
     display: block;
+  }
+
+  #search-field {
+    border-radius: 0.5em 0 0 0;
+  }
+
+  #submit-button {
+    border-radius: 0 0.5em 0 0;
   }
 
   .weather-display-container {
@@ -186,8 +214,9 @@ header,
   }
 
   .card {
-    display: none;
     width: 19%;
+    margin-bottom: 0;
+    flex-direction: column;
   }
 
   .forecast-cards {
