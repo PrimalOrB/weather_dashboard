@@ -401,23 +401,26 @@ function setStorage( data ) {
         'timestamp': moment().valueOf()
      }
 
-    // check to see if location already exists
-    var existing = searchHistory.filter(x => x.location === storageItem.location);
+        // search history to see if current item exists. If yes, splice out. This will move current entry to the top of the desc list
+    $.each(searchHistory, function(i){
+        if(searchHistory[i].location === storageItem.location) {
+            searchHistory.splice(i,1);
+            return false;
+        }
+    });
 
-    // if it does not exist, push to storage and update display
-    if( !existing.length ) {
-        searchHistory.push( storageItem) 
-
-        var string = JSON.stringify( searchHistory )
-
-        localStorage.setItem( 'weather-search-history', string )
+        // push to storage item
+    searchHistory.push( storageItem) 
+        // stringify
+    var string = JSON.stringify( searchHistory )
+        // set to localStorage
+    localStorage.setItem( 'weather-search-history', string )
         // clear current display
-        $( '.search-history' )
-            .html( '' )
-        // post display
-        displayHistory()
-    }
-}
+    $( '.search-history' )
+        .html( '' )
+     // post display
+    displayHistory()
+};
 
 // get storage entries
 function getStorage() {
@@ -463,3 +466,27 @@ function clearHistory() {
 
 // listen for click on clear history button
 $( '#clear-history' ).click( clearHistory );
+
+//listen for click on history item
+$( '.search-history').on( 'click', 'li' , function() {
+        // get lat and lon attributes
+    var lat = $(this)
+        .find( 'span' )
+        .attr( 'lat' )
+    var lon = $(this)
+        .find( 'span' )
+        .attr( 'lon' )
+        // send coordinates to be generated into object for displaying
+    postHistoryItem( lat, lon )
+})
+
+// generate geocode and send to posting process
+function postHistoryItem( lat, lon ) {
+    var geocode = {
+        coords: {
+            latitude: lat,
+            longitude: lon
+        }
+    }
+    geoSuccess( geocode )
+}
