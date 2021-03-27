@@ -31,11 +31,30 @@ header {
 
 .search-container {
   flex: 1;
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: column;
 }
 
 .search-input-container {
   display: flex;
 }
+
+.search-history-container {
+  height: 100%;
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* .search-history {
+    flex: 1;
+  }
+  
+  .clear-history {
+    flex: 1;
+  } */
 
 #search-field {
   width: 100%;

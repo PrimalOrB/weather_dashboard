@@ -15,8 +15,6 @@ var searchCity
     };
     // if suucess, gather lat/lon into object and send to reverse lookup the city name
     function geoSuccess(position) {
-
-        console.log(position)
             // declate lat/lon vairables
         var latitude
         var longitude
