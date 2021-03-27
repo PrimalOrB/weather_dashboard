@@ -15,12 +15,13 @@
         
         <div class="content">
             <div class="search-container">
-                <div class="search-input-container">
-                    <input type="text" placeholder="Search Location" id="search-field"/>
+                <form class="search-input-container" id="search-form">
+                    <input type="text" placeholder="Search Location" id="search-field" autocomplete="off"/>
                     <ul class="dropdown">
                     </ul>
                     <button type="submit"><i class="fas fa-search"></i></button>
-                </div>    
+                </form>
+   
                 <div class="search-history-container">
                     <ul class="search-history">
                         <li><span>test</span></li>
@@ -47,11 +48,6 @@
                 <div class=forecast-container>
                     <h2>5-day forecast</h2>
                     <div class="forecast-cards">
-                        <div class="card"></div>
-                        <div class="card"></div>
-                        <div class="card"></div>
-                        <div class="card"></div>
-                        <div class="card"></div>
                     </div>
                 </div
             </main>
