@@ -456,8 +456,8 @@ function getStorage() {
 function displayHistory() {
         // sort history list descending (newest first)
     var sortedDesc = searchHistory.sort(({timestamp:a}, {timestamp:b}) => b-a);
-        // set max value of list (20 items)
-    var listValue = Math.min( sortedDesc.length, 20 )
+        // set max value of list (13 items)
+    var listValue = Math.min( sortedDesc.length, 13 )
     for ( var i = 0; i < listValue; i++) {
         var span = $( '<span>' )
             .text( sortedDesc[i].location )
