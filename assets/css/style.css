@@ -54,6 +54,10 @@ header {
   list-style: none;
 }
 
+.dropdown li:hover {
+  background-color: lightgoldenrodyellow;
+}
+
 .search-history {
   display: none;
 }

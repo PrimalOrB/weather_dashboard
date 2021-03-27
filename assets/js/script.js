@@ -1,5 +1,7 @@
 // openWeather API Key
 var apiKey = '8462b9d4211d198b0ad040601557274b';
+// global city search value
+var searchCity
 
 // On Page Load, get current location data and set as current selection
     // Get navigator geolocation (on user confirmation)
@@ -13,14 +15,26 @@ var apiKey = '8462b9d4211d198b0ad040601557274b';
     };
     // if suucess, gather lat/lon into object and send to reverse lookup the city name
     function geoSuccess(position) {
-        var latitude  = position.coords.latitude;
-        var longitude = position.coords.longitude;
+
+        console.log(position)
+            // declate lat/lon vairables
+        var latitude
+        var longitude
+            // determine data source and post
+       if( position.coords ) { //if positions.coords exists (from GeoLocationPosition)
+            latitude = position.coords.latitude;
+            longitude = position.coords.longitude;
+       } else {
+            latitude  = position.location.latlon.latitude;
+            longitude = position.location.latlon.longitude;
+       }
+
             // set lat/lon object
-            var geocode = {
-                lat: latitude,
-                lon: longitude
-            };
-            getLocationToCity( geocode );
+        var geocode = {
+            lat: latitude,
+            lon: longitude
+        };
+        getLocationToCity( geocode );
     };
     // if error, alert
     function geoError() {
@@ -36,7 +50,7 @@ var apiKey = '8462b9d4211d198b0ad040601557274b';
                 geoCodeLocation( data[0].name, data[0].country )
             });
             } else {
-            alert("Error: " + response.statusText);
+                geoError();
             }
         })
         .catch( function ( error ) {
@@ -55,7 +69,7 @@ function geoCodeLocation( location, country ){
             postLocation( data[0] )
             });
         } else {
-          alert("Error: " + response.statusText);
+            geoError();
         }
       })
       .catch( function ( error ) {
@@ -74,7 +88,7 @@ function fetchWeatherData( geocode ) {
             postForecast( data )
           });
         } else {
-          alert("Error: " + response.statusText);
+            geoError();
         }
       })
       .catch( function ( error ) {
@@ -256,27 +270,35 @@ function uvColor( value ) {
 $( '#search-field' ).on( 'keyup change', function() {
         // get current text value
     var text = $(this).val();
+        // if text entry has length, show
+    if( text.length ) {
         // search URL citites API for list using current string
-    var search = `https://api.teleport.org/api/cities/?search=${text}`;
-        // fetch request using search URL
-    fetch(search).then(function(response) {
-        if (response.ok) {
-          response.json().then(function(data) {
-                // clear current dropdown
-            $( '.dropdown' )
-                .html( '' );
-                // populate dropdown with updated entries
-            dropDownList( data )
-            });
-        } else {
+        var search = `https://api.teleport.org/api/cities/?search=${text}`;
+            // fetch request using search URL
+        fetch(search).then(function(response) {
+            if (response.ok) {
+            response.json().then(function(data) {
+                    // clear current dropdown
+                $( '.dropdown' )
+                    .html( '' );
+                    // populate dropdown with updated entries
+                dropDownList( data )
+                searchCity = {}
+                searchCity = data
+                });
+            } else {
+                    // else error
+                geoError();
+            }
+        })
+        .catch( function ( error ) {
                 // else error
-          console.log("Error: " + response.statusText);
-        }
-      })
-      .catch( function ( error ) {
-            // else error
-          console.log( 'Unable to connect to cities API' );
-      });
+            console.log( 'Unable to connect to cities API' );
+        });
+    } else {
+            //otherwise, close/clear
+        closeDropdown()
+    }
 });
 
 // open drop down list and populate
@@ -297,6 +319,35 @@ function dropDownList( data ) {
         $( '.dropdown' )
             .append( li );
     }
+};
+
+// close dropdown and clear elements
+function closeDropdown() {
+    // clear dropdown
+ $( '.dropdown' )
+    .html( '' )
+    .css( { 'display': 'none' } );
+};
+
+// fetch data from entry (dropdown or search)
+function fetchLocationHref( data ) {
+    fetch(data).then(function(response) {
+        if (response.ok) {
+          response.json().then(function(data) {
+                    // send data to capture geocoding
+                geoSuccess(data)
+                    // close dropdown
+                closeDropdown()
+            });
+        } else {
+            // error
+            geoError();
+        }
+      })
+      .catch( function ( error ) {
+          // error
+          console.log( 'Unable to connect to cities API' );
+      });
 }
 
 // listen for click inside / outside the dropdown list for selections
@@ -308,60 +359,31 @@ $( document ).click( function( event ) {
             // capture the dataset from dropDownList
         var data = event.target.dataset.geoname;
             // fetch based on the associated dataset
-        fetch(data).then(function(response) {
-            if (response.ok) {
-              response.json().then(function(data) {
-                        // capture lat / lon
-                    var latitude  = data.location.latlon.latitude;
-                    var longitude = data.location.latlon.longitude;
-                        // store in object
-                    var geocode = {
-                        lat: latitude,
-                        lon: longitude
-                    };
-                        // send to getLocationCity
-                    getLocationToCity( geocode )
-                        // clear dropdown
-                    $( '.dropdown' )
-                        .html( '' )
-                        .css( { 'display': 'none' } )
-                        // clear search field
-                    $( '#search-field' )
-                        .val( '' )
-                });
-            } else {
-                // error
-              console.log("Error: " + response.statusText);
-            }
-          })
-          .catch( function ( error ) {
-              // error
-              console.log( 'Unable to connect to cities API' );
-          });
+        fetchLocationHref( data )
 
     } else {
             // click outside means clear and hide the dropdown
-        $( '.dropdown' )
-            .html( '' )
-            .css( { 'display': 'none' } )
+        closeDropdown()
     }
-  });
+});
 
   // listen for form submit as another entry method
 $( '#search-form' ).submit( function(event) {
     event.preventDefault()
-    var value = $( '#search-field' ).val()
-    geoCodeLocation( value )
-    // click outside means clear and hide the dropdown
-    $( '#search-field' )
-        .val( '' )
-    $( '.dropdown' )
-        .html( '' )
-        .css( { 'display': 'none' } )
-        console.log('submit')
-})  
+
+    // cannot assume text entry is correct, so using the cities API, take the first entry of the dropdown as the "closest" match
+
+        // send dataset to search the data
+    fetchLocationHref( searchCity._embedded['city:search-results'][0]._links['city:item'].href )
+
+        // clear search field
+$( '#search-field' )
+    .val( '' );
+        // click outside means clear and hide the dropdown
+    closeDropdown()
+});  
 
 
-    // Initialize current date pull
+    // Initialize current date fetch
 geoLocation();
 
