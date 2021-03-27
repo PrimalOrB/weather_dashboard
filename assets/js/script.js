@@ -170,6 +170,7 @@ function postForecast( data ) {
 
                 // append elements    
             $( this )
+            .css({ 'display': 'block'})
             .append( title )
             .append( iconDiv )
             .append( tempDiv )

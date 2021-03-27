@@ -88,7 +88,7 @@ header {
 
 .card {
   width: 100%;
-  height: 200px;
+  display: none;
 }
 
 @media screen and (min-width: 768px) {
@@ -105,6 +105,7 @@ header {
   }
 
   .card {
+    display: none;
     width: 19%;
   }
 
