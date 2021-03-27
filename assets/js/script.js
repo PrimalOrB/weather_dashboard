@@ -49,7 +49,7 @@ geoLocation();
     };
     // reverse lookup of coordinates to find city  
     function getLocationToCity( geocode ) {
-        var apiUrl = `http://api.openweathermap.org/geo/1.0/reverse?lat=${geocode.lat}&lon=${geocode.lon}&limit=${1}&appid=${apiKey}`;
+        var apiUrl = `https://api.openweathermap.org/geo/1.0/reverse?lat=${geocode.lat}&lon=${geocode.lon}&limit=${1}&appid=${apiKey}`;
 
         fetch(apiUrl).then(function(response) {
             if (response.ok) {
@@ -133,7 +133,7 @@ function postCurrent( data ) {
         .append( date );
         // capture weather status icon
     var iconImg = $( '<img>' )
-        .attr( 'src', `http://openweathermap.org/img/wn/${data.current.weather[0].icon}@2x.png`);
+        .attr( 'src', `https://openweathermap.org/img/wn/${data.current.weather[0].icon}@2x.png`);
         // create containing div and add
     var iconDiv = $( '<div>' )
         .addClass( 'icon' )
@@ -225,7 +225,7 @@ function postForecast( data ) {
                 .text( momentTime ) ;
                 // icon image
             var iconImg = $( '<img>' )
-                .attr( 'src', `http://openweathermap.org/img/wn/${data.daily[i+1].weather[0].icon}@2x.png`);
+                .attr( 'src', `https://openweathermap.org/img/wn/${data.daily[i+1].weather[0].icon}@2x.png`);
                 // containing div
             var iconDiv = $( '<div>' )
                 .addClass( 'icon' )
