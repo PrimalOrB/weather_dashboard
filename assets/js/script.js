@@ -67,7 +67,7 @@ geoLocation();
 
 // get geoLocation based on city/country to get weather data (needed for onecall API)
 function geoCodeLocation( location, country ){
-    var apiUrl = `http://api.openweathermap.org/geo/1.0/direct?q=${location},${country}&limit=${1}&appid=${apiKey}`;
+    var apiUrl = `https://api.openweathermap.org/geo/1.0/direct?q=${location},${country}&limit=${1}&appid=${apiKey}`;
 
     fetch(apiUrl).then(function(response) {
         if (response.ok) {
