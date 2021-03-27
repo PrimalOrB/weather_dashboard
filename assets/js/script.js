@@ -365,6 +365,8 @@ function fetchLocationHref( data ) {
                 geoSuccess(data)
                     // close dropdown
                 closeDropdown()
+                $( '#search-field' )
+                    .val( '' )
             });
         } else {
             // error

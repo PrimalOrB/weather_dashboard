@@ -26,11 +26,13 @@ header {
 header,
 .search-container,
 .current-container,
-.forecast-container {
+.forecast-container,
+footer {
   background-color: lightskyblue;
   border-radius: 0.75em;
   padding: 0.5em;
   margin-top: 0.5em;
+  box-shadow: 1px 2px 4px 0px rgba(0, 0, 0, 0.4);
 }
 
 .content {
@@ -57,10 +59,6 @@ header,
   flex-direction: column;
   justify-content: space-between;
 }
-
-/* .search-history {
-    flex: 1;
-  }*/
 
 #clear-history {
   border: none;
@@ -125,7 +123,7 @@ header,
 
 .search-history {
   display: none;
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.5);
   padding: 0.25em;
   border-radius: 0 0 0.5em 0.5em;
 }
@@ -144,6 +142,7 @@ header,
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
+  border-radius: 0.5em 0.5em 0 0;
 }
 
 .current-title .date {
@@ -155,12 +154,23 @@ header,
   flex-wrap: wrap;
 }
 
-.current-info {
-  flex: 1;
+.current-container > * {
+  background-color: rgba(255, 255, 255, 0.5);
 }
 
-.current-icon {
+.current-info {
   flex: 1;
+  border-radius: 0 0 0 0.5em;
+}
+
+#cur-uv span {
+  border-radius: 0.25em;
+  padding: 0.25em 0.5em;
+  border: 0.5px solid rgba(0, 0, 0, 0.5);
+}
+
+.icon {
+  border-radius: 0 0 0.5em 0;
 }
 
 .current-container h2,
@@ -181,6 +191,10 @@ header,
   margin: 0 0.25em;
 }
 
+.forecast-container h2 {
+  margin-bottom: 0.25em;
+}
+
 .forecast-cards {
   display: flex;
   flex-direction: column;
@@ -189,7 +203,7 @@ header,
 .card {
   width: 100%;
   /* display: none; */
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.5);
   padding: 0.5em;
   border-radius: 0.5em;
   margin-bottom: 0.5em;
@@ -214,6 +228,11 @@ header,
 .forecast-icon {
   text-align: center;
   flex: 1;
+}
+
+footer {
+  font-size: smaller;
+  text-align: center;
 }
 
 @media screen and (min-width: 768px) {
